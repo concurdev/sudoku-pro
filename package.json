@@ -1,0 +1,47 @@
+{
+  "name": "sudoku-pro",
+  "version": "1.0.0",
+  "description": "sudoku-pro humbly presents itself as your go-to Node.js toolkit for generating, solving, and printing Sudoku puzzles spanning different difficulty levels. Powered by the reliable backtracking algorithm, it aspires to offer enthusiasts and learners alike a simple yet effective platform to engage with Sudoku puzzles. With Sudoku-Pro, embark on a journey of brain-teasing challenges or delve into educational endeavors with ease. Our humble interface aims to make Sudoku puzzle creation and enjoyment accessible to all, ensuring a delightful experience for users of varying skill levels. Join us in exploring the possibilities of Sudoku puzzles while we humbly accompany you on your puzzle-solving adventures.",
+  "main": "sudoku-pro.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/concurdev/sudoku-pro.git"
+  },
+  "scripts": {
+    "easy": "node sudoku-pro e",
+    "medium": "node sudoku-pro m",
+    "hard": "node sudoku-pro h"
+  },
+  "files": [
+    "sudoku-pro.js"
+  ],
+  "keywords": [
+    "Sudoku",
+    "Puzzle",
+    "Game",
+    "Logic",
+    "Numbers",
+    "Board",
+    "Generator",
+    "Solver",
+    "Difficulty",
+    "Easy",
+    "Medium",
+    "Hard",
+    "Logic Game",
+    "Recreational Mathematics",
+    "Brain Teaser",
+    "Puzzle Game",
+    "Numbers Game"
+  ],
+  "author": "Ashish Vashisht",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "bugs": {
+    "url": "https://github.com/concurdev/sudoku-pro/issues"
+  },
+  "homepage": "https://github.com/concurdev/sudoku-pro#readme",
+  "devDependencies": {}
+}
