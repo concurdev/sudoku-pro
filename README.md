@@ -1,6 +1,6 @@
 # sudoku-pro: Sudoku Generator and Sudoku Solver
 
-sudoku-pro package that provides functionalities to generate, solve, and print Sudoku puzzles of varying difficulty levels using the backtracking algorithm. It offers an easy-to-use interface to create Sudoku puzzles for both recreational and educational purposes.
+sudoku-pro is a JavaScript package that provides functionalities to generate, solve, and print Sudoku puzzles of varying difficulty levels using the backtracking algorithm. It offers an easy-to-use interface to create Sudoku puzzles for both recreational and educational purposes.
 
 ## Installation
 
