@@ -1,185 +1,229 @@
+const readline = require("readline");
+
 // Get the difficulty level
 const args = process.argv.slice(2);
 
 function shuffle(array) {
-    // Fisher-Yates shuffle algorithm
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+  // Fisher-Yates shuffle algorithm
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 function generateSudoku(difficulty) {
-    const sudoku = Array.from({ length: 9 }, () => Array(9).fill(0));
+  const sudoku = Array.from({ length: 9 }, () => Array(9).fill(0));
 
-    // Fill the diagonal blocks (3x3 sub-grids) with valid numbers
-    for (let i = 0; i < 9; i += 3) {
-        const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        shuffle(nums);
-        for (let j = 0; j < 3; j++) {
-            for (let k = 0; k < 3; k++) {
-                sudoku[i + j][i + k] = nums.pop();
-            }
-        }
+  // Fill the diagonal blocks (3x3 sub-grids) with valid numbers
+  for (let i = 0; i < 9; i += 3) {
+    const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    shuffle(nums);
+    for (let j = 0; j < 3; j++) {
+      for (let k = 0; k < 3; k++) {
+        sudoku[i + j][i + k] = nums.pop();
+      }
     }
+  }
 
-    // Solve the puzzle
-    solveSudoku(sudoku);
+  // Solve the puzzle
+  const solvedSudoku = JSON.parse(JSON.stringify(sudoku)); // Create a deep copy for later use
+  solveSudoku(solvedSudoku);
 
-    // Determine the number of cells to remove based on difficulty level
-    let numToRemove;
-    if (difficulty === 'e') {
-        numToRemove = Math.floor(Math.random() * 20) + 20; // Easy difficulty
-    } else if (difficulty === 'm') {
-        numToRemove = Math.floor(Math.random() * 25) + 40; // Medium difficulty
-    } else if (difficulty === 'h') {
-        numToRemove = Math.floor(Math.random() * 30) + 55; // Hard difficulty
+  // Determine the number of cells to remove based on difficulty level
+  let numToRemove;
+  if (difficulty === "e") {
+    numToRemove = Math.floor(Math.random() * 20) + 20; // Easy difficulty
+  } else if (difficulty === "m") {
+    numToRemove = Math.floor(Math.random() * 25) + 40; // Medium difficulty
+  } else if (difficulty === "h") {
+    numToRemove = Math.floor(Math.random() * 30) + 55; // Hard difficulty
+  } else {
+    throw new Error(
+      'Invalid difficulty level. Please use "e" for easy, "m" for medium, or "h" for hard.'
+    );
+  }
+
+  // Create a copy of the solved Sudoku to remove cells from
+  const sudokuCopy = JSON.parse(JSON.stringify(solvedSudoku));
+
+  // Remove some numbers to create the puzzle
+  for (let i = 0; i < numToRemove; i++) {
+    const row = Math.floor(Math.random() * 9);
+    const col = Math.floor(Math.random() * 9);
+    if (sudokuCopy[row][col] !== 0) {
+      sudokuCopy[row][col] = 0;
     } else {
-        throw new Error('Invalid difficulty level. Please use "e" for easy, "m" for medium, or "h" for hard.');
+      i--; // Try again if the cell is already empty
     }
+  }
 
-    // Remove some numbers to create the puzzle
-    for (let i = 0; i < numToRemove; i++) {
-        const row = Math.floor(Math.random() * 9);
-        const col = Math.floor(Math.random() * 9);
-        if (sudoku[row][col] !== 0) {
-            sudoku[row][col] = 0;
-        } else {
-            i--; // Try again if the cell is already empty
-        }
-    }
-
-    return sudoku;
+  return { sudoku: sudokuCopy, solvedSudoku };
 }
 
 function solveSudoku(sudoku) {
-    const emptyCell = findEmptyCell(sudoku);
-    if (!emptyCell) {
-        return true; // Puzzle solved successfully
-    }
+  const emptyCell = findEmptyCell(sudoku);
+  if (!emptyCell) {
+    return true; // Puzzle solved successfully
+  }
 
-    const [row, col] = emptyCell;
-    for (let num = 1; num <= 9; num++) {
-        if (isValidMove(sudoku, row, col, num)) {
-            sudoku[row][col] = num;
-            if (solveSudoku(sudoku)) {
-                return true;
-            }
-            sudoku[row][col] = 0; // Undo the assignment
-        }
+  const [row, col] = emptyCell;
+  for (let num = 1; num <= 9; num++) {
+    if (isValidMove(sudoku, row, col, num)) {
+      sudoku[row][col] = num;
+      if (solveSudoku(sudoku)) {
+        return true;
+      }
+      sudoku[row][col] = 0; // Undo the assignment
     }
+  }
 
-    return false; // No solution found, backtrack
+  return false; // No solution found, backtrack
 }
 
 function findEmptyCell(sudoku) {
-    // Function to find an empty cell in the Sudoku grid
-    for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-            if (sudoku[row][col] === 0) {
-                return [row, col];
-            }
-        }
+  // Function to find an empty cell in the Sudoku grid
+  for (let row = 0; row < 9; row++) {
+    for (let col = 0; col < 9; col++) {
+      if (sudoku[row][col] === 0) {
+        return [row, col];
+      }
     }
-    return null; // No empty cell found
+  }
+  return null; // No empty cell found
 }
 
 function isValidMove(sudoku, row, col, num) {
-    // Check if assigning num to the cell at (row, col) is a valid move
-    // Check row
-    for (let i = 0; i < 9; i++) {
-        if (sudoku[row][i] === num) {
-            return false; // Number already exists in the row
-        }
+  // Check if assigning num to the cell at (row, col) is a valid move
+  // Check row
+  for (let i = 0; i < 9; i++) {
+    if (sudoku[row][i] === num) {
+      return false; // Number already exists in the row
     }
+  }
 
-    // Check column
-    for (let i = 0; i < 9; i++) {
-        if (sudoku[i][col] === num) {
-            return false; // Number already exists in the column
-        }
+  // Check column
+  for (let i = 0; i < 9; i++) {
+    if (sudoku[i][col] === num) {
+      return false; // Number already exists in the column
     }
+  }
 
-    // Check 3x3 subgrid
-    const startRow = Math.floor(row / 3) * 3;
-    const startCol = Math.floor(col / 3) * 3;
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            if (sudoku[startRow + i][startCol + j] === num) {
-                return false; // Number already exists in the subgrid
-            }
-        }
+  // Check 3x3 subgrid
+  const startRow = Math.floor(row / 3) * 3;
+  const startCol = Math.floor(col / 3) * 3;
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (sudoku[startRow + i][startCol + j] === num) {
+        return false; // Number already exists in the subgrid
+      }
     }
+  }
 
-    return true; // Valid move
+  return true; // Valid move
 }
 
 function printSudoku(sudoku) {
-    console.log("Sudoku Puzzle:");
-    console.log("-------------------------");
-    sudoku.forEach((row, rowIndex) => {
-        if (rowIndex % 3 === 0 && rowIndex !== 0) {
-            console.log("------|-------|-------");
-        }
-        row.forEach((cell, cellIndex) => {
-            if (cellIndex % 3 === 0 && cellIndex !== 0) {
-                process.stdout.write("| ");
-            }
-            process.stdout.write(String(cell || '.') + ' ');
-            if (cellIndex === 8) {
-                console.log();
-            }
-        });
+  console.log("Sudoku Puzzle:");
+  console.log("-------------------------");
+  sudoku.forEach((row, rowIndex) => {
+    if (rowIndex % 3 === 0 && rowIndex !== 0) {
+      console.log("------|-------|-------");
+    }
+    row.forEach((cell, cellIndex) => {
+      if (cellIndex % 3 === 0 && cellIndex !== 0) {
+        process.stdout.write("| ");
+      }
+      process.stdout.write(String(cell || ".") + " ");
+      if (cellIndex === 8) {
+        console.log();
+      }
     });
-    console.log("-------------------------");
+  });
+  console.log("-------------------------");
 }
 
 function printSudokuWithAnswers(sudoku) {
-    console.log("Sudoku Puzzle with Answers:");
-    console.log("-------------------------");
-    sudoku.forEach((row, rowIndex) => {
-        if (rowIndex % 3 === 0 && rowIndex !== 0) {
-            console.log("------|-------|-------");
-        }
-        row.forEach((cell, cellIndex) => {
-            if (cellIndex % 3 === 0 && cellIndex !== 0) {
-                process.stdout.write("| ");
-            }
-            process.stdout.write(String(cell) + ' ');
-            if (cellIndex === 8) {
-                console.log();
-            }
-        });
+  console.log("Sudoku Puzzle with Answers:");
+  console.log("-------------------------");
+  sudoku.forEach((row, rowIndex) => {
+    if (rowIndex % 3 === 0 && rowIndex !== 0) {
+      console.log("------|-------|-------");
+    }
+    row.forEach((cell, cellIndex) => {
+      if (cellIndex % 3 === 0 && cellIndex !== 0) {
+        process.stdout.write("| ");
+      }
+      process.stdout.write(String(cell) + " ");
+      if (cellIndex === 8) {
+        console.log();
+      }
     });
-    console.log("-------------------------");
-    // set flag to true and clear interval 
-    sudokuPrinted = true;
-    clearInterval(intervalId);
+  });
+  console.log("-------------------------");
+}
+
+function getHint(sudoku, solvedSudoku) {
+  const emptyCells = [];
+  for (let i = 0; i < 9; i++) {
+    for (let j = 0; j < 9; j++) {
+      if (sudoku[i][j] === 0) {
+        emptyCells.push([i, j]);
+      }
+    }
+  }
+  if (emptyCells.length === 0) {
+    console.log("No empty cells left to provide a hint.");
+    return;
+  }
+  const randomIndex = Math.floor(Math.random() * emptyCells.length);
+  const [row, col] = emptyCells[randomIndex];
+  sudoku[row][col] = solvedSudoku[row][col];
+  console.log(
+    `Hint: The number at row ${row + 1}, column ${col + 1} is ${
+      solvedSudoku[row][col]
+    }`
+  );
+}
+
+function waitForHint(sudoku, solvedSudoku) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.question(
+    "Press 'h' for a hint or 'c' for the complete solution: ",
+    (answer) => {
+      if (answer.trim().toLowerCase() === "h") {
+        getHint(sudoku, solvedSudoku);
+        printSudoku(sudoku);
+      } else if (answer.trim().toLowerCase() === "c") {
+        printSudokuWithAnswers(solvedSudoku);
+        process.exit();
+      } else {
+        console.log(
+          "Invalid input. Please press 'h' for a hint or 'c' for the complete solution."
+        );
+      }
+      rl.close();
+      waitForHint(sudoku, solvedSudoku); // Ask again for hint or complete solution
+    }
+  );
 }
 
 const difficulty = args[0]; // Get the difficulty level from command line arguments
 
-let sudokuPrinted = false;
+const { sudoku, solvedSudoku } = generateSudoku(difficulty);
+printSudoku(sudoku);
 
-// Set interval to run every 5 seconds
-const intervalId = setInterval(() => {
-    // Check if sudokuPrinted is true
-    if (sudokuPrinted) {
-        // If sudokuPrinted is true, clear the interval
-        clearInterval(intervalId);
-    } else {
-        // If sudokuPrinted is false, continue executing
-        const sudoku = generateSudoku(difficulty);
-        printSudoku(sudoku);
-        solveSudoku(sudoku); // Solve the generated puzzle
-        printSudokuWithAnswers(sudoku);
-    }
-}, 5000);
+waitForHint(sudoku, solvedSudoku);
 
 module.exports = {
-    generateSudoku,
-    printSudoku,
-    solveSudoku,
-    printSudokuWithAnswers
+  generateSudoku,
+  printSudoku,
+  solveSudoku,
+  printSudokuWithAnswers,
+  getHint,
+  waitForHint,
 };

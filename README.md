@@ -22,7 +22,13 @@ npm run hard
 
 ```javascript
 // Import the module
-const { generateSudoku, printSudoku, solveSudoku } = require("sudoku-pro");
+const {
+  generateSudoku,
+  printSudoku,
+  solveSudoku,
+  getHint,
+  waitForHint,
+} = require("sudoku-pro");
 
 // Get the difficulty level
 const args = process.argv.slice(2);
@@ -30,16 +36,17 @@ const args = process.argv.slice(2);
 const difficulty = args[0]; // Get the difficulty level from command line arguments
 
 // Generate a Sudoku puzzle
-const sudoku = generateSudoku(difficulty);
+const { sudoku, solvedSudoku } = generateSudoku(difficulty);
 
 // Print the puzzle
 printSudoku(sudoku);
 
-// Solve the puzzle
-solveSudoku(sudoku);
+// Function to wait for user input for hint or complete solution
+waitForHint(sudoku, solvedSudoku);
 
-// Print the solved puzzle
-printSudoku(sudoku);
+// This script will continue running until the user chooses to exit
 
 process.exit();
 ```
+
+Now, in addition to generating and solving Sudoku puzzles, users can also request hints or print the complete solution while the script is running.
