@@ -1,6 +1,6 @@
 {
   "name": "sudoku-pro",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "sudoku-pro humbly presents itself as your go-to toolkit for generating, solving, and printing Sudoku puzzles spanning different difficulty levels. Powered by the reliable backtracking algorithm, it aspires to offer enthusiasts and learners alike a simple yet effective platform to engage with Sudoku puzzles. With Sudoku-Pro, embark on a journey of brain-teasing challenges or delve into educational endeavors with ease. This humble interface aims to make Sudoku puzzle creation and enjoyment accessible to all, ensuring a delightful experience for users of varying skill levels. Join us in exploring the possibilities of Sudoku puzzles while we humbly accompany you on your puzzle-solving adventures.",
   "changelog": {
     "1.0.6": "generateSudoku, printSudoku, solveSudoku",
