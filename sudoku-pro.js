@@ -37,7 +37,9 @@ function generateSudoku(difficulty) {
   } else if (difficulty === "m") {
     numToRemove = Math.floor(Math.random() * 25) + 40; // Medium difficulty
   } else if (difficulty === "h") {
-    numToRemove = Math.floor(Math.random() * 30) + 55; // Hard difficulty
+    do {
+      numToRemove = Math.floor(Math.random() * 30) + 70; // Hard difficulty
+    } while (numToRemove > 81); // Keep recalculating until numToRemove <= 81
   } else {
     throw new Error(
       'Invalid difficulty level. Please use "e" for easy, "m" for medium, or "h" for hard.'
