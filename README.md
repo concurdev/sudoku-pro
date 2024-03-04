@@ -16,6 +16,7 @@ npm i sudoku-pro
 npm run easy
 npm run medium
 npm run hard
+npm run very
 ```
 
 ## Example: How to use the functions in your applications

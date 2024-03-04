@@ -5,7 +5,8 @@
   "changelog": {
     "1.0.6": "generateSudoku, printSudoku, solveSudoku",
     "1.0.7": "getHint function added",
-    "1.0.8": "fixed the bug which cause issue while generating hard sudoku"
+    "1.0.8": "fixed the bug which cause issue while generating hard sudoku",
+    "1.0.10": "streamlined the code with concise logic, added very hard sudoku level"
   },
   "main": "sudoku-pro.js",
   "repository": {
@@ -15,7 +16,8 @@
   "scripts": {
     "easy": "node sudoku-pro e",
     "medium": "node sudoku-pro m",
-    "hard": "node sudoku-pro h"
+    "hard": "node sudoku-pro h",
+    "very": "node sudoku-pro v"
   },
   "files": [
     "sudoku-pro.js"
@@ -33,6 +35,7 @@
     "Easy Sudoku",
     "Medium Sudoku",
     "Hard Sudoku",
+    "Very hard Sudoku",
     "Brain Teaser",
     "Puzzle",
     "Puzzle Game",

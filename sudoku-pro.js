@@ -32,18 +32,23 @@ function generateSudoku(difficulty) {
 
   // Determine the number of cells to remove based on difficulty level
   let numToRemove;
-  if (difficulty === "e") {
-    numToRemove = Math.floor(Math.random() * 20) + 20; // Easy difficulty
-  } else if (difficulty === "m") {
-    numToRemove = Math.floor(Math.random() * 25) + 40; // Medium difficulty
-  } else if (difficulty === "h") {
-    do {
-      numToRemove = Math.floor(Math.random() * 30) + 70; // Hard difficulty
-    } while (numToRemove > 81); // Keep recalculating until numToRemove <= 81
-  } else {
-    throw new Error(
-      'Invalid difficulty level. Please use "e" for easy, "m" for medium, or "h" for hard.'
-    );
+  switch (difficulty) {
+    case "e":
+      numToRemove = ensureNumToRemoveInRange(20, 20); // Easy difficulty
+      break;
+    case "m":
+      numToRemove = ensureNumToRemoveInRange(25, 50); // Medium difficulty
+      break;
+    case "h":
+      numToRemove = ensureNumToRemoveInRange(30, 60); // Hard difficulty
+      break;
+    case "v":
+      numToRemove = ensureNumToRemoveInRange(35, 75); // Very hard difficulty
+      break;
+    default:
+      throw new Error(
+        'Invalid difficulty level. Please use "e" for easy, "m" for medium, "h" for hard, or "v" for very hard.'
+      );
   }
 
   // Create a copy of the solved Sudoku to remove cells from
@@ -61,6 +66,14 @@ function generateSudoku(difficulty) {
   }
 
   return { sudoku: sudokuCopy, solvedSudoku };
+}
+
+function ensureNumToRemoveInRange(lowerBound, upperBound) {
+  let numToRemove;
+  do {
+    numToRemove = Math.floor(Math.random() * lowerBound) + upperBound;
+  } while (numToRemove > 81); // Ensure numToRemove is within the range 0-81
+  return numToRemove;
 }
 
 function solveSudoku(sudoku) {
