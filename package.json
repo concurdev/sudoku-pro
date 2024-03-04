@@ -5,7 +5,7 @@
   "changelog": {
     "1.0.6": "generateSudoku, printSudoku, solveSudoku",
     "1.0.7": "getHint function added",
-    "1.0.7": "fixed the bug which cause issue while generating hard sudoku"
+    "1.0.8": "fixed the bug which cause issue while generating hard sudoku"
   },
   "main": "sudoku-pro.js",
   "repository": {
